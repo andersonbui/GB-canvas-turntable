@@ -212,20 +212,13 @@
 
   function sonido() {
       var ease = bezier(.94,.13,.94,.56)
-      var sound = new Howl({
-        src: ['asset/waka.wav'],
-        volume: 0.5,
-        onend: function () {
-          document.getElementById('contador').innerText = cont;
-          // clearInterval(interval)
-          // alert('Finished!');
-        }
-      });
-      sound.play()
+      reproAudio('asset/waka.wav')
+
       anterior = tiempo
       tiempo =  6000 * ease(cont/(cantidadSon + inicial));
       let total = tiempo - anterior
       cont++
+      document.getElementById('contador').innerText = cont;
       if(cont < (cantidadSon + inicial)){
         // sonido(tiempo, cont+1)
         let interval = setTimeout(sonido, total )
@@ -237,7 +230,7 @@
    */
   function events() {
     bind(btn, 'click', function () {
-      
+
       cont = inicial
       sonido() 
       /*      var prizeId,
@@ -262,11 +255,22 @@
     });
   }
 
-  function eGot() {
+  async function eGot() {
     if (optsPrize.chances) removeClass(btn, 'disabled');
-    fnGotBack(prizes[optsPrize.prizeId].text);
+
+    await reproAudio('asset/crrect_answer3.mp3',()=>{
+      fnGotBack(prizes[optsPrize.prizeId].text);
+    });
   }
 
+  function reproAudio(urlaudio, callback = null) {
+      var sound = new Howl({
+        src: [urlaudio],
+        volume: 0.5,
+        onend: callback
+      });
+      sound.play()
+  }
 
   /**
    * Bind events to elements
