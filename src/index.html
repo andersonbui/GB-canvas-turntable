@@ -62,8 +62,10 @@
         <canvas class="gb-turntable-canvas" width="400" height="400px">¡Lo siento! Navegador no soporta.</canvas>
       </div>
 
-      <a class="gb-turntable-btn" href="javascript:;">lotería</a>
+      <a class="gb-turntable-btn" href="javascript:;"><b class="text-btn">SPIN</b></a>
     </section>
+    <br/>
+    <br/>
 
 
     <pre>
@@ -113,34 +115,39 @@ gbTurntable.init({
           // 获取奖品信息 llenar informacion de premios
           // callback && callback(['11元红包','2元红包','3元红包','4元红包','5元红包','6元红包']);
           callback && callback([{
-                text: '1 premio',
+                text: 'tv 4\'',
                 img: 'images/redpacket.png'
               }, {
-                text: '2 premio'
+                text: '2% off'
               }, {
-                text: '3 premio'
+                text: 'try again'
               }, {
                 text: 'monitor',
                 img: 'images/display.png'
               }, {
-                text: '5 premio'
+                text: '2% off'
               }, {
-                text: '6 premio'
+                text: '1% off'
               }, {
-                text: '7 premio'
+                text: '5% off'
               }, {
-                text: '8 premio'
+                text: 'try other day'
               }, {
-                text: '9 premio'
+                text: 'lapicero'
               }, {
-                text: '10 premio'
+                text: '10% off'
             }])
         },
         getPrize: function (callback) {
-          // 获取中奖信息 Información ganar
-          var num = Math.random() * 6 >>> 0, //奖品ID Identificación premios
-            chances = num; // 可抽奖次数 Que el número de la lotería
+          // 获取中奖信息 Información de premio a ganar
+          var num = Math.random() * 10 >>> 0, //奖品ID Identificación del premio al azar ganado
+            chances = num; // 可抽奖次数 Que el número de la lotería - otra oportunidad - si cae el primero(0) no habra mas oportunidad
           callback && callback([num, chances]);
+        },
+        options:  {
+          "audio_ruleta": "asset/waka.wav",
+          "audio_gano": "asset/crrect_answer3.mp3",
+          "audio_reintento": "asset/coin04.mp3",
         },
         gotBack: function (data) {
           alert('Felicidades, has ganado: ' + data);

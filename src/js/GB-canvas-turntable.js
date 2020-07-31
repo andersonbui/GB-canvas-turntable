@@ -11,14 +11,14 @@
   var $,
     ele,
     container,
-    canvas,
-    num,
-    prizes,
-    btn,
-    deg = 0,
-    fnGetPrize,
-    fnGotBack,
-    optsPrize;
+    canvas,     // referencia del elemento canvas
+    num,        // cantidad de premios
+    prizes,     // premios a mostrar en la ruleta
+    btn,        // referencia al boton que inicia la ruleta
+    deg = 0,    // almacena angulo de giro de la ruleta
+    fnGetPrize, // referencia de funcion que se ejecuta para obtener la informacion de premios
+    fnGotBack,  // referencia de funcion que se ejecuta al finalizar la ruleta
+    optsPrize;  // informacion de premios 
 
   var cssPrefix,
     eventPrefix,
@@ -68,14 +68,14 @@
 
   var transform = cssSupport.transform;
   var transitionEnd = cssSupport.transitionEnd;
-
+  var options;
   // alert(transform);
   // alert(transitionEnd);
 
   function init(opts) {
     fnGetPrize = opts.getPrize;
     fnGotBack = opts.gotBack;
-
+    options = opts.options;
     opts.config(function (data) {
       prizes = opts.prizes = data;
       num = prizes.length;
@@ -102,11 +102,12 @@
     opts = opts || {};
     if (!opts.id || num >>> 0 === 0) return;
 
+    var anguloinicial = 0;
     var id = opts.id,
-      rotateDeg = 360 / num / 2 + 90, // 扇形回转角度
+      rotateDeg = 360 / num / 2 + anguloinicial, // 扇形回转角度 ángulo de rotación del sector
       ctx,
-      prizeItems = document.createElement('ul'), // 奖项容器
-      turnNum = 1 / num, // 文字旋转 turn 值
+      prizeItems = document.createElement('ul'), // 奖项容器 contenedor de premios
+      turnNum = 1 / num, // 文字旋转 turn 值 valor a su vez la rotación de texto
       html = []; // 奖项
 
     ele = $(id);
@@ -135,6 +136,7 @@
       // 旋转弧度,需将角度转换为弧度,使用 degrees * Math.PI/180 公式进行计算。 
       // Arco de rotación, el ángulo debe ser convertido a radianes, utilizando grados * math.pi / 180 fórmula
       ctx.rotate((360 / num * i - rotateDeg) * Math.PI / 180);
+      // console.log("rotateDeg: "+rotateDeg)
       // 绘制圆弧 Dibujar un arco
       ctx.arc(0, 0, radio, 0, 2 * Math.PI / num, false);
 
@@ -148,7 +150,7 @@
       // 填充扇形 Lleno de ventilador
       ctx.fill();
       // 绘制边框 Dibujar un borde
-      ctx.lineWidth = 0.5;
+      ctx.lineWidth = 0.9;
       ctx.strokeStyle = '#e4370e';
       ctx.stroke();
 
@@ -200,6 +202,7 @@
     document.getElementById('contador').innerText=deg;
     // setTimeout(function() {
     // addClass(container, 'gb-run');
+    // console.log(options)
     container.style[transform] = 'rotate(' + deg + 'deg)';
     // }, 10);
   }
@@ -209,10 +212,11 @@
   var inicial = 10
   var cont = inicial
   var cantidadSon = 110
+  var ease = null
 
   function sonido() {
-      var ease = bezier(.94,.13,.94,.56)
-      reproAudio('asset/waka.wav')
+      ease = bezier(.94,.13,.94,.56)
+      options.audio_ruleta && reproAudio(options.audio_ruleta)
 
       anterior = tiempo
       tiempo =  6000 * ease(cont/(cantidadSon + inicial));
@@ -246,27 +250,33 @@
         // 计算旋转角度 El cálculo de un ángulo de rotación
         deg = deg || 0;
         deg = deg + (360 - deg % 360) + (360 * 10 - data[0] * (360 / num))
-        console.log("angulo rotacion: "+deg)
+        // console.log("angulo rotacion: "+deg)
         runRotate(deg);
       });
 
-      // 中奖提示 Tip ganar
+      // 中奖提示 Tip ganar - evento que se ejecuta cuando finalice la transicion (animacion de ruleta)
       bind(container, transitionEnd, eGot);
     });
   }
 
-  async function eGot() {
-    if (optsPrize.chances) removeClass(btn, 'disabled');
+  function eGot() {
 
-    await reproAudio('asset/crrect_answer3.mp3',()=>{
+    options.audio_gano && reproAudio(options.audio_gano, ()=>{
       fnGotBack(prizes[optsPrize.prizeId].text);
+      if (optsPrize.chances) removeClass(btn, 'disabled');
     });
   }
 
+  /**
+   * 
+   * @param {String} urlaudio url http/local de archivo de audio
+   * @param {Function} callback ejecutada cuando la reproduccion del audio finaliza
+   */
   function reproAudio(urlaudio, callback = null) {
+      let volum = ease(cont/(cantidadSon + inicial))
       var sound = new Howl({
         src: [urlaudio],
-        volume: 0.5,
+        volume: volum,
         onend: callback
       });
       sound.play()
