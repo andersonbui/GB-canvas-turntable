@@ -32,7 +32,7 @@
     testEle = document.createElement('p'),
     cssSupport = {};
 
-  // 嗅探特性
+  // 嗅探特性 - olfateando propiedades
   Object.keys(vendors).some(function (vendor) {
     if (testEle.style[vendor + (vendor ? 'T' : 't') + 'ransitionProperty'] !== undefined) {
       cssPrefix = vendor ? '-' + vendor.toLowerCase() + '-' : '';
@@ -42,7 +42,7 @@
   });
 
   /**
-   * [兼容事件前缀]
+   * [兼容事件前缀] eventos compatibles prefijo
    * @param  {[type]} name [description]
    * @return {[type]}      [description]
    */
@@ -51,7 +51,7 @@
   }
 
   /**
-   * [兼容CSS前缀]
+   * [兼容CSS前缀] prefijo css Compatible
    * @param  {[type]} name [description]
    * @return {[type]}      [description]
    */
@@ -115,44 +115,47 @@
     btn = ele.querySelector('.gb-turntable-btn');
 
     if (!canvas.getContext) {
-      showMsg('抱歉！浏览器不支持。');
+      showMsg('¡Lo siento! Navegador no soportado'); // ¡Lo siento! Navegador no soporta
       return;
     }
-    // 获取绘图上下文
+    // 获取绘图上下文 Obtener dibujo contexto
     ctx = canvas.getContext('2d');
+    //radio de la torta
+    radio = 200; 
 
     for (var i = 0; i < num; i++) {
-      // 保存当前状态
+      // 保存当前状态 Guardar el estado actual
       ctx.save();
-      // 开始一条新路径
+      // 开始一条新路径 Iniciar un nuevo camino
       ctx.beginPath();
-      // 位移到圆心，下面需要围绕圆心旋转
-      ctx.translate(150, 150);
-      // 从(0, 0)坐标开始定义一条新的子路径
+      // 位移到圆心，下面需要围绕圆心旋转 Giro al centro, la siguiente necesidad de rotar alrededor del centro
+      ctx.translate(radio, radio);
+      // 从(0, 0)坐标开始定义一条新的子路径 A partir de (0, 0) de coordenadas define un nuevo sub-path
       ctx.moveTo(0, 0);
-      // 旋转弧度,需将角度转换为弧度,使用 degrees * Math.PI/180 公式进行计算。
+      // 旋转弧度,需将角度转换为弧度,使用 degrees * Math.PI/180 公式进行计算。 
+      // Arco de rotación, el ángulo debe ser convertido a radianes, utilizando grados * math.pi / 180 fórmula
       ctx.rotate((360 / num * i - rotateDeg) * Math.PI / 180);
-      // 绘制圆弧
-      ctx.arc(0, 0, 150, 0, 2 * Math.PI / num, false);
+      // 绘制圆弧 Dibujar un arco
+      ctx.arc(0, 0, radio, 0, 2 * Math.PI / num, false);
 
-      // 颜色间隔
+      // 颜色间隔 espaciado de color
       if (i % 2 == 0) {
         ctx.fillStyle = '#ffb820';
       } else {
         ctx.fillStyle = '#ffcb3f';
       }
 
-      // 填充扇形
+      // 填充扇形 Lleno de ventilador
       ctx.fill();
-      // 绘制边框
+      // 绘制边框 Dibujar un borde
       ctx.lineWidth = 0.5;
       ctx.strokeStyle = '#e4370e';
       ctx.stroke();
 
-      // 恢复前一个状态
+      // 恢复前一个状态 Restaurar el estado anterior
       ctx.restore();
 
-      // 奖项列表
+      // 奖项列表 Lista de premios
       var prizeList = opts.prizes;
       html.push('<li class="gb-turntable-item"> <span style="');
       html.push(transform + ': rotate(' + i * turnNum + 'turn)">');
@@ -169,7 +172,7 @@
   }
 
   /**
-   * [提示]
+   * [提示] rápido
    * @param  {String} msg [description]
    */
   function showMsg(msg) {
@@ -194,18 +197,49 @@
   function runRotate(deg) {
     // runInit();
 
+    document.getElementById('contador').innerText=deg;
     // setTimeout(function() {
     // addClass(container, 'gb-run');
     container.style[transform] = 'rotate(' + deg + 'deg)';
     // }, 10);
   }
 
+  var tiempo = 1
+  var anterior = 0
+  var inicial = 10
+  var cont = inicial
+  var cantidadSon = 110
+
+  function sonido() {
+      var ease = bezier(.94,.13,.94,.56)
+      var sound = new Howl({
+        src: ['asset/waka.wav'],
+        volume: 0.5,
+        onend: function () {
+          document.getElementById('contador').innerText = cont;
+          // clearInterval(interval)
+          // alert('Finished!');
+        }
+      });
+      sound.play()
+      anterior = tiempo
+      tiempo =  6000 * ease(cont/(cantidadSon + inicial));
+      let total = tiempo - anterior
+      cont++
+      if(cont < (cantidadSon + inicial)){
+        // sonido(tiempo, cont+1)
+        let interval = setTimeout(sonido, total )
+      }
+  }
   /**
    * 抽奖事件
    * @return {[type]} [description]
    */
   function events() {
     bind(btn, 'click', function () {
+      
+      cont = inicial
+      sonido() 
       /*      var prizeId,
                 chances;*/
 
@@ -216,13 +250,14 @@
           prizeId: data[0],
           chances: data[1]
         }
-        // 计算旋转角度
+        // 计算旋转角度 El cálculo de un ángulo de rotación
         deg = deg || 0;
         deg = deg + (360 - deg % 360) + (360 * 10 - data[0] * (360 / num))
+        console.log("angulo rotacion: "+deg)
         runRotate(deg);
       });
 
-      // 中奖提示
+      // 中奖提示 Tip ganar
       bind(container, transitionEnd, eGot);
     });
   }

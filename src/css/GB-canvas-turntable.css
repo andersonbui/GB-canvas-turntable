@@ -31,7 +31,7 @@
   border-radius: inherit;
   background-clip: padding-box;
   background-color: #ffcb3f;
-  -webkit-transition: transform 6s ease;
+  -webkit-transition: transform 6s cubic-bezier(0.06, 0.87, 0.06, 0.44);
   transition: transform 6s ease; }
 
 .gb-turntable-container canvas {
