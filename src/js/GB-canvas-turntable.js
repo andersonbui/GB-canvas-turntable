@@ -209,9 +209,9 @@
 
   var tiempo = 1
   var anterior = 0
-  var inicial = 10
+  var inicial = 3
   var cont = inicial
-  var cantidadSon = 110
+  var cantidadParticiones = 110
   var ease = null
 
   function sonido() {
@@ -219,11 +219,11 @@
       options.audio_ruleta && reproAudio(options.audio_ruleta)
 
       anterior = tiempo
-      tiempo =  6000 * ease(cont/(cantidadSon + inicial));
+      tiempo =  6000 * ease(cont/(cantidadParticiones + inicial));
       let total = tiempo - anterior
       cont++
       document.getElementById('contador').innerText = cont;
-      if(cont < (cantidadSon + inicial)){
+      if(cont < (cantidadParticiones + inicial)){
         // sonido(tiempo, cont+1)
         let interval = setTimeout(sonido, total )
       }
@@ -249,8 +249,13 @@
         }
         // 计算旋转角度 El cálculo de un ángulo de rotación
         deg = deg || 0;
-        deg = deg + (360 - deg % 360) + (360 * 10 - data[0] * (360 / num))
-        // console.log("angulo rotacion: "+deg)
+        vueltas =  (360 - deg % 360) + (360 * 10 - data[0] * (360 / num))
+        
+        cantidadParticiones = vueltas / (360 / num)
+        deg = deg + vueltas
+
+        console.log("angulo rotacion: "+vueltas + " - cantidadParticiones: "+cantidadParticiones)
+        // calculo de 
         runRotate(deg);
       });
 
@@ -273,7 +278,7 @@
    * @param {Function} callback ejecutada cuando la reproduccion del audio finaliza
    */
   function reproAudio(urlaudio, callback = null) {
-      let volum = ease(cont/(cantidadSon + inicial))
+      let volum = ease(cont/(cantidadParticiones + inicial))
       var sound = new Howl({
         src: [urlaudio],
         volume: volum,

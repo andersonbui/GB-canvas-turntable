@@ -126,7 +126,8 @@ gbTurntable.init({
                 img: 'images/display.png'
               }, {
                 text: '2% off'
-              }, {
+              }
+              , {
                 text: '1% off'
               }, {
                 text: '5% off'
@@ -136,12 +137,19 @@ gbTurntable.init({
                 text: 'lapicero'
               }, {
                 text: '10% off'
-            }])
+              }, {
+                text: '11% off'
+              }, {
+                text: '15% off'
+              }
+          ])
         },
         getPrize: function (callback) {
+          let cantidadRegalos = 5
           // 获取中奖信息 Información de premio a ganar
-          var num = Math.random() * 10 >>> 0, //奖品ID Identificación del premio al azar ganado
+          var num = Math.random() * cantidadRegalos >>> 0, //奖品ID Identificación del premio al azar ganado
             chances = num; // 可抽奖次数 Que el número de la lotería - otra oportunidad - si cae el primero(0) no habra mas oportunidad
+          console.log("num: "+num)
           callback && callback([num, chances]);
         },
         options:  {
