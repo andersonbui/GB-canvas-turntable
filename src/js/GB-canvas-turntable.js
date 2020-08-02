@@ -115,6 +115,8 @@
     container = ele.querySelector('.gb-turntable-container');
     btn = ele.querySelector('.gb-turntable-btn');
 
+    // btn.options.color_btn_spin
+
     if (!canvas.getContext) {
       showMsg('¡Lo siento! Navegador no soportado'); // ¡Lo siento! Navegador no soporta
       return;
@@ -123,6 +125,9 @@
     ctx = canvas.getContext('2d');
     //radio de la torta
     radio = 200; 
+
+    // 奖项列表 Lista de premios
+    var prizeList = opts.prizes;
 
     for (var i = 0; i < num; i++) {
       // 保存当前状态 Guardar el estado actual
@@ -140,25 +145,27 @@
       // 绘制圆弧 Dibujar un arco
       ctx.arc(0, 0, radio, 0, 2 * Math.PI / num, false);
 
-      // 颜色间隔 espaciado de color
-      if (i % 2 == 0) {
-        ctx.fillStyle = '#ffb820';
+      if(prizeList[i].color){
+        ctx.fillStyle = prizeList[i].color
       } else {
-        ctx.fillStyle = '#ffcb3f';
+        // 颜色间隔 espaciado de color
+        if (i % 2 == 0) {
+          ctx.fillStyle = '#ffb820';
+        } else {
+          ctx.fillStyle = '#ffcb3f';
+        }
       }
 
       // 填充扇形 Lleno de ventilador
       ctx.fill();
       // 绘制边框 Dibujar un borde
       ctx.lineWidth = 0.9;
-      ctx.strokeStyle = '#e4370e';
+      ctx.strokeStyle = (!!options.color_borde)? options.color_borde : '#e4370e';
       ctx.stroke();
 
       // 恢复前一个状态 Restaurar el estado anterior
       ctx.restore();
 
-      // 奖项列表 Lista de premios
-      var prizeList = opts.prizes;
       html.push('<li class="gb-turntable-item"> <span style="');
       html.push(transform + ': rotate(' + i * turnNum + 'turn)">');
       !!prizeList[i].img ? html.push('<img src="' + prizeList[i].img + '" />') : html.push(prizeList[i].text)
@@ -222,7 +229,7 @@
       tiempo =  6000 * ease(cont/(cantidadParticiones + inicial));
       let total = tiempo - anterior
       cont++
-      document.getElementById('contador').innerText = cont;
+      // document.getElementById('contador').innerText = cont;
       if(cont < (cantidadParticiones + inicial)){
         // sonido(tiempo, cont+1)
         let interval = setTimeout(sonido, total )
@@ -254,7 +261,7 @@
         cantidadParticiones = vueltas / (360 / num)
         deg = deg + vueltas
 
-        console.log("angulo rotacion: "+vueltas + " - cantidadParticiones: "+cantidadParticiones)
+        // console.log("angulo rotacion: "+vueltas + " - cantidadParticiones: "+cantidadParticiones)
         // calculo de 
         runRotate(deg);
       });

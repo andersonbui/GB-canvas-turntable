@@ -120,7 +120,8 @@ gbTurntable.init({
               }, {
                 text: '2% off'
               }, {
-                text: 'try again'
+                text: 'try again',
+                color: '#CDFFD8'
               }, {
                 text: 'monitor',
                 img: 'images/display.png'
@@ -132,7 +133,8 @@ gbTurntable.init({
               }, {
                 text: '5% off'
               }, {
-                text: 'try other day'
+                text: 'try other day',
+                color: '#CDFFD8'
               }, {
                 text: 'lapicero'
               }, {
@@ -149,13 +151,16 @@ gbTurntable.init({
           // 获取中奖信息 Información de premio a ganar
           var num = Math.random() * cantidadRegalos >>> 0, //奖品ID Identificación del premio al azar ganado
             chances = num; // 可抽奖次数 Que el número de la lotería - otra oportunidad - si cae el primero(0) no habra mas oportunidad
-          console.log("num: "+num)
+          // console.log("num: "+num)
           callback && callback([num, chances]);
         },
         options:  {
           "audio_ruleta": "asset/waka.wav",
           "audio_gano": "asset/crrect_answer3.mp3",
           "audio_reintento": "asset/coin04.mp3",
+          'color_ruleta' : '#E44025',
+          'color_btn_spin' : '#E44025',
+          'color_borde' : '#e4eeee',
         },
         gotBack: function (data) {
           alert('Felicidades, has ganado: ' + data);
