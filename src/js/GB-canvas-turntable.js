@@ -31,6 +31,8 @@
     },
     testEle = document.createElement('p'),
     cssSupport = {};
+    //radio de la torta
+    radio = 200; 
 
   // 嗅探特性 - olfateando propiedades
   Object.keys(vendors).some(function (vendor) {
@@ -114,8 +116,24 @@
     canvas = ele.querySelector('.gb-turntable-canvas');
     container = ele.querySelector('.gb-turntable-container');
     btn = ele.querySelector('.gb-turntable-btn');
-
-    // btn.options.color_btn_spin
+    // tamaño de la ruleta
+    if(options.color_rouleta) {
+      radio = options.tamano_ruleta;
+    }
+    canvas.width = (2*radio);
+    canvas.height = (2*radio);
+    prizeItems.style.width = (2*radio-20)+"px";
+    prizeItems.style.height = (2*radio-20)+"px";
+    ele.style.width = (2*radio) + "px";
+    ele.style.height = (2*radio) + "px";
+    // estilo del boton spin
+    if(options.color_btn_spin) {
+      btn.style.cssText = '--btn-color: '+options.color_btn_spin;
+    }
+    // estilo del borde de la ruleta
+    if(options.color_rouleta) {
+      ele.style.borderColor = options.color_rouleta;
+    }
 
     if (!canvas.getContext) {
       showMsg('¡Lo siento! Navegador no soportado'); // ¡Lo siento! Navegador no soporta
@@ -123,8 +141,6 @@
     }
     // 获取绘图上下文 Obtener dibujo contexto
     ctx = canvas.getContext('2d');
-    //radio de la torta
-    radio = 200; 
 
     // 奖项列表 Lista de premios
     var prizeList = opts.prizes;
@@ -171,7 +187,7 @@
       !!prizeList[i].img ? html.push('<img src="' + prizeList[i].img + '" />') : html.push(prizeList[i].text)
       html.push('</span> </li>');
       if ((i + 1) === num) {
-        prizeItems.className = 'gb-turntalbe-list';
+        prizeItems.className = 'gb-turntable-list';
         container.appendChild(prizeItems);
         prizeItems.innerHTML = html.join('');
       }
