@@ -30,9 +30,12 @@
       ms: 'ms'
     },
     testEle = document.createElement('p'),
-    cssSupport = {};
+    cssSupport = {},
     //radio de la torta
-    radio = 200; 
+    radio = 200,
+    audioruleta = null,
+    audiogano = null
+    ; 
 
   // 嗅探特性 - olfateando propiedades
   Object.keys(vendors).some(function (vendor) {
@@ -78,6 +81,8 @@
     fnGetPrize = opts.getPrize;
     fnGotBack = opts.gotBack;
     options = opts.options;
+    options.audio_ruleta && (audioruleta = options.audio_ruleta);
+    options.audio_gano && (audiogano = options.audio_gano);
     opts.config(function (data) {
       prizes = opts.prizes = data;
       num = prizes.length;
@@ -239,18 +244,19 @@
 
   function sonido() {
       ease = bezier(.94,.13,.94,.56)
-      options.audio_ruleta && reproAudio(options.audio_ruleta)
+      audioruleta && reproAudio(audioruleta)
 
       anterior = tiempo
       tiempo =  6000 * ease(cont/(cantidadParticiones + inicial));
       let total = tiempo - anterior
       cont++
-      // document.getElementById('contador').innerText = cont;
+      document.getElementById('contador').innerText = cont;
       if(cont < (cantidadParticiones + inicial)){
         // sonido(tiempo, cont+1)
         let interval = setTimeout(sonido, total )
       }
   }
+
   /**
    * 抽奖事件
    * @return {[type]} [description]
@@ -288,11 +294,16 @@
   }
 
   function eGot() {
+    if(audiogano) {
+      reproAudio(audiogano, ()=>{
+        fnGotBack(prizes[optsPrize.prizeId].text);
+        if (optsPrize.chances) removeClass(btn, 'disabled');
+      });
+    } else {
+        fnGotBack(prizes[optsPrize.prizeId].text);
+        if (optsPrize.chances) removeClass(btn, 'disabled');
+    }
 
-    options.audio_gano && reproAudio(options.audio_gano, ()=>{
-      fnGotBack(prizes[optsPrize.prizeId].text);
-      if (optsPrize.chances) removeClass(btn, 'disabled');
-    });
   }
 
   /**

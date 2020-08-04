@@ -63,6 +63,7 @@
       </div>
 
       <a class="gb-turntable-btn" href="javascript:;"><b class="text-btn">SPIN</b></a>
+      <div class='gb-indicador'></div>
     </section>
     <br/>
     <br/>
@@ -106,7 +107,8 @@ gbTurntable.init({
   
   <script src="js/GB-canvas-turntable.js"></script>
   <script src="js/index.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.1.1/howler.min.js"></script>
+  <script src="js/howler.min.js"></script>
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.1.1/howler.min.js"></script> -->
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       gbTurntable.init({
@@ -136,11 +138,13 @@ gbTurntable.init({
                 text: 'try other day',
                 color: '#CDFFD8'
               }, {
-                text: 'lapicero'
+                text: 'try again',
+                color: '#CDFFD8'
               }, {
                 text: '10% off'
               }, {
-                text: '11% off'
+                text: 'try other day',
+                color: '#CDFFD8'
               }, {
                 text: '15% off'
               }
@@ -150,12 +154,13 @@ gbTurntable.init({
           let cantidadRegalos = 12
           // 获取中奖信息 Información de premio a ganar
           var num = Math.random() * cantidadRegalos >>> 0, //奖品ID Identificación del premio al azar ganado
-            chances = 7; // 可抽奖次数 Que el número de la lotería - otra oportunidad - si cae el primero(0) no habra mas oportunidad
+            chances = !(num==10 || num==7); // 可抽奖次数 Que el número de la lotería - otra oportunidad - si cae el primero(0) no habra mas oportunidad
           // console.log("num: "+num)
           callback && callback([num, chances]);
         },
         options:  {
-          "audio_ruleta": "asset/waka.wav",
+          "audio_ruleta": "asset/tick.mp3",
+          // "audio_ruleta": "asset/waka.wav",
           "audio_gano": "asset/crrect_answer3.mp3",
           "audio_reintento": "asset/coin04.mp3",
           'color_rouleta' : '#E44025',
